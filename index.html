@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-Hant"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>⚔️ 黃龍山之戰・凡人修仙傳</title>
+<style>
+:root{--bg:#e9c98a;--pn:#8a5a2b;--tx:#fff;--in:#3b2412;--bl:#2d8cf0;--rd:#e0455a;--gd:#ffcf33;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#3a2c1a;--pn:#5b3a1c}}
+:root[data-theme="dark"]{--bg:#3a2c1a;--pn:#5b3a1c}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--in);font-family:system-ui,"Noto Sans TC",sans-serif;font-size:20px;line-height:1.35;display:flex;justify-content:center}
+#app{width:100%;max-width:600px;padding:8px}
+.hud{display:flex;gap:6px;align-items:center;justify-content:space-between;background:var(--pn);color:var(--tx);border-radius:12px;padding:10px 12px;font-weight:700;font-size:22px;flex-wrap:wrap;row-gap:4px}
+.hud span{white-space:nowrap}
+canvas{width:100%;display:block;margin:8px 0;border-radius:12px;background:#8fc65a;border:3px solid var(--pn)}
+.panel{background:var(--pn);color:var(--tx);border-radius:12px;padding:10px;margin-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 4px;font-size:20px;background:#f5d488;color:var(--in);cursor:pointer;border-bottom:3px solid #b98a3a}
+button:disabled{opacity:.45}
+button.go{background:var(--bl);color:#fff;border-color:#1a5fb0;width:100%;font-size:26px;padding:14px 4px;margin-top:8px}
+button small .ico{font-size:1.5em}.story{line-height:1.6;font-size:19px}.story summary{font-weight:700;font-size:24px;cursor:pointer}.story p{margin:8px 0 0}.em{font-size:1.5em;line-height:1;vertical-align:-.1em}
+button small{display:block;font-weight:600;font-size:15px;line-height:1.3;margin-top:2px}
+#log{font-size:26px;font-weight:600;min-height:1.4em;text-align:center;margin:2px 0}
+textarea{width:100%;height:110px;font:15px monospace;border-radius:8px;border:2px solid #b98a3a;padding:4px}
+.ico{font-size:1.6em;display:inline-block;width:1.15em;height:1.15em;vertical-align:-.22em;line-height:1.15em;text-align:center;font-style:normal}
+html.has-spr .ico{color:transparent;background-image:url('se.png');background-repeat:no-repeat;background-size:600% 400%;background-position:var(--px,0) var(--py,0);border-radius:3px}
+h4{margin:0 0 8px;font-size:24px}#farm{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;background:#c9a266;padding:4px;border-radius:10px}#farm div{aspect-ratio:1;background:#e9c98a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:44px;color:var(--in)}#farm .ico{font-size:1em}#farm .ok{outline:2px dashed #fff8;cursor:pointer}#farm .w{background:#8fd6dc}#farm .t{background:#8fc65a}button.sel{outline:4px solid #fff}
+.row{display:flex;gap:6px;margin-top:6px}.row button{flex:1}
+</style></head><body><div id="app">
+<div class="hud"><span><i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="tr">0</b></span><span><i class="ico" style="--px:100%;--py:66.6667%">🏰</i> 關隘 <b id="st">1</b></span><span>回合 <b id="rd">1</b>/8</span><span id="hp">❤️❤️❤️</span></div>
+<div class="hud" style="margin-top:6px"><span><i class="ico" style="--px:40%;--py:33.3333%">🗡️</i> +<b id="fa">0</b>%</span><span><i class="ico" style="--px:100%;--py:33.3333%">🛡️</i> +<b id="ba">0</b>%</span><span><i class="ico" style="--px:60%;--py:66.6667%">🪙</i> <b id="gd">0</b> (+<b id="inc">0</b>/回合)</span></div>
+<div class="hud" style="margin-top:6px;justify-content:space-around"><span><i class="ico" style="--px:60%;--py:0%">🤴</i> 黃龍山 <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="tr2"></b></span><span><span class="em">⚔️</span> VS <span class="em">⚔️</span></span><span><i class="ico" style="--px:20%;--py:33.3333%">👹</i> <b id="fn"></b> <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="ft"></b></span></div>
+<details class="panel story" open><summary>📜 黃龍山之戰・故事背景</summary>
+<p>天南九國盟，幕蘭人大舉入侵，越國七派與各路修士被迫退守黃龍山，與幕蘭展開一場生死之戰。</p>
+<p>你是黃龍山的守山長老，以靈石招募劍修、弓修與靈騎，並在山中興建煉器坊、護山陣與靈石礦，提升戰力與靈石收入。</p>
+<p>幕蘭修士自山上方層層來襲。護山大陣共有數顆陣心（❤️），陣心盡碎則山門失守。每擊退一波幕蘭修士可得靈石，每攻破一處關隘便向前推進一步，看你能守到第幾關。</p>
+<p style="font-size:15px;opacity:.85">※ 本故事為《凡人修仙傳》世界觀的遊戲改編設定，戰役細節非原著考據。</p></details>
+<canvas id="cv" width="720" height="800"></canvas>
+<div id="log"></div>
+<div class="panel" id="shop"><h4><span class="em">🏗️</span> 佈陣備戰</h4>
+<div class="grid" id="units"></div>
+<div class="grid" id="ups" style="margin-top:6px"></div><div id="cap" style="font-size:19px;margin:6px 0 2px;text-align:center"></div><div id="farm"></div>
+<button class="go" id="fight"><span class="em">⚔️</span> 出戰！</button></div>
+<div class="panel"><h4>💾 修行記錄 (JSON)</h4>
+<div class="row"><button id="ex"><span class="em">⬇️</span> 匯出存檔</button><button id="fi"><span class="em">📂</span> 匯入存檔</button><button id="rs"><span class="em">🗑️</span> 重置</button></div>
+<input type="file" id="file" accept=".json,application/json" hidden></div>
+<div class="row" style="margin-bottom:8px"><button id="spd"><span class="em">⏩</span> 速度 x1</button></div>
+</div>
+<script>
+const $=id=>document.getElementById(id),KEY='siege-emoji-save-v1';
+// CSS 精靈圖：se.png 若與本檔同路徑則自動切換成精靈圖示，否則維持內建 emoji
+const SPR={s:[0,0],a:[1,0],c:[2,0],leader:[3,0],gs:[4,0],ga:[5,0],gr:[0,1],boss:[1,1],sword:[2,1],bow:[3,1],horse:[4,1],anvil:[5,1],barracks:[0,2],mine:[1,2],heart:[2,2],coin:[3,2],trophy:[4,2],castle:[5,2],tent:[0,3],water:[1,3],tree:[2,3],wall:[3,3],wood:[4,3],coins:[5,3]};
+let sprOk=false,sprImg=new Image(),cw=0,ch=0;
+sprImg.onload=()=>{sprOk=true;cw=sprImg.naturalWidth/6;ch=sprImg.naturalHeight/4;document.documentElement.classList.add('has-spr');ui()};
+sprImg.onerror=()=>{sprOk=false};
+sprImg.src='se.png';
+function icon(key,fallback){const[c,r]=SPR[key];return `<i class="ico" style="--px:${c/5*100}%;--py:${r/3*100}%">${fallback}</i>`}
+function spx(key){const[c,r]=SPR[key];return[c*cw,r*ch]}
+const T={s:{e:'🗡️',sp:'s',n:'劍修',c:10,hp:30,atk:5,rg:14,sp0:38},a:{e:'🏹',sp:'a',n:'弓修',c:12,hp:18,atk:4.5,rg:85,sp0:34},c:{e:'🐴',sp:'c',n:'靈騎',c:22,hp:48,atk:7,rg:14,sp0:75}};
+const UP={f:{e:'⚒️',sp:'anvil',n:'煉器坊',d:'攻擊+10%',b:20},b:{e:'🏠',sp:'barracks',n:'護山陣',d:'生命+10%',b:20},m:{e:'⛏️',sp:'mine',n:'靈石礦',d:'收入+6',b:25}};
+const fresh=()=>({v:1,stage:1,round:1,gold:40,lives:3,trophies:3000,best:1,army:{s:3,a:0,c:0},up:{f:0,b:0,m:0},wins:0,grid:Array.from({length:25},(_,i)=>[1,2,7,17,22].includes(i)?'~':[12,20].includes(i)?'#':'')});
+let sel='f',S=fresh(),battle=null,speed=1;
+function load(){try{const r=localStorage.getItem(KEY);if(r)S=norm(JSON.parse(r))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function norm(o){const d=fresh(),n=x=>Math.max(0,Math.floor(+x)||0);
+ if(!o||typeof o!=='object')throw 0;
+ d.stage=Math.max(1,n(o.stage));d.round=Math.min(8,Math.max(1,n(o.round)));d.gold=n(o.gold);d.lives=Math.min(9,Math.max(1,n(o.lives)));
+ d.trophies=n(o.trophies)||3000;d.best=Math.max(d.stage,n(o.best));d.wins=n(o.wins);
+ for(const k in d.army)d.army[k]=n(o.army&&o.army[k]);const base=fresh().grid;
+ if(Array.isArray(o.grid)&&o.grid.length==25)d.grid=base.map((c,i)=>c===''&&o.grid[i]&&'fbm'.includes(o.grid[i])?o.grid[i]:c);
+ else{const q=[];for(const k in UP)for(let i=0;i<n(o.up&&o.up[k]);i++)q.push(k);d.grid=base.map(c=>c===''&&q.length?q.shift():c)}
+ for(const k in d.up)d.up[k]=d.grid.filter(c=>c===k).length;return d}
+const mul=(k)=>1+.1*S.up[k];
+const lvl=()=>(S.stage-1)*8+S.round;
+const income=()=>20+S.up.m*7+lvl()*2;
+const upCost=k=>Math.round(UP[k].b*(1+S.up[k]*.8));
+const NA=['血煞','幽冥','赤煉','玄陰','黑煞','天魔'],NB=['老怪','真人','散人','道人','尊者','魔君'];
+let foe={n:'',t:0};
+function newFoe(){foe={n:NA[Math.random()*6|0]+NB[Math.random()*6|0],t:Math.max(0,S.trophies+(Math.random()*40-20|0))}}
+function ui(){
+ if(!foe.n)newFoe();$('tr2').textContent=S.trophies;$('fn').textContent=foe.n;$('ft').textContent=foe.t;
+ $('tr').textContent=S.trophies;$('st').textContent=S.stage;$('rd').textContent=S.round;
+ $('hp').innerHTML=icon('heart','❤️').repeat(S.lives);$('fa').textContent=S.up.f*10;$('ba').textContent=S.up.b*10;
+ $('gd').textContent=S.gold;$('inc').textContent=income();
+ const busy=!!battle;
+ $('units').innerHTML=Object.entries(T).map(([k,t])=>`<button data-u="${k}" ${busy||S.gold<t.c?'disabled':''}>${icon(t.sp,t.e)} ${t.n}<small>${icon('coin','🪙')}${t.c}｜已有 ${S.army[k]}</small></button>`).join('');
+ $('ups').innerHTML=Object.entries(UP).map(([k,u])=>`<button data-p="${k}" class="${sel==k?'sel':''}">${icon(u.sp,u.e)} ${u.n} ×${S.up[k]}<small>${u.d}｜${icon('coin','🪙')}${upCost(k)}</small></button>`).join('');
+ const tot=S.up.f+S.up.b+S.up.m,cap=capOf();$('cap').textContent=`點選空地建造「${UP[sel].n}」　建築 ${tot}/${cap}（每過一關隘 +2）`;
+ $('farm').innerHTML=S.grid.map((c,i)=>{const e=c==='~'?icon('water','💧'):c==='#'?icon('tree','🌳'):c?icon(UP[c].sp,UP[c].e):'➕';const ok=!c&&!busy&&tot<cap&&S.gold>=upCost(sel);return `<div data-i="${i}" class="${c==='~'?'w':c==='#'?'t':ok?'ok':''}" style="${c===''&&!ok?'opacity:.5':''}">${e}</div>`}).join('');
+ $('fight').disabled=busy||total(S.army)==0;
+}
+const total=a=>a.s+a.a+a.c;
+$('units').onclick=e=>{const b=e.target.closest('[data-u]');if(!b)return;const k=b.dataset.u;if(S.gold>=T[k].c){S.gold-=T[k].c;S.army[k]++;save();ui()}};
+const capOf=()=>6+2*(S.stage-1);
+$('ups').onclick=e=>{const b=e.target.closest('[data-p]');if(b){sel=b.dataset.p;ui()}};
+$('farm').onclick=e=>{const d=e.target.closest('[data-i]');if(!d||battle)return;const i=+d.dataset.i,c=upCost(sel),L=$('log');
+ if(S.grid[i]!=='')return void(L.textContent=S.grid[i]==='~'||S.grid[i]==='#'?'⛔ 這格是靈池或靈木，無法建造':'⛔ 這格已有建築');
+ if(S.up.f+S.up.b+S.up.m>=capOf())return void(L.textContent='⛔ 建築數量已達上限，攻破關隘可增加');
+ if(S.gold<c)return void(L.textContent=`⛔ 靈石不足，需要 🪙${c}，擊退魔修可獲得靈石收入`);
+ S.gold-=c;S.grid[i]=sel;S.up[sel]++;L.textContent=`✅ 已建造 ${UP[sel].n}`;save();ui()};
+const cv=$('cv'),cx=cv.getContext('2d'),W=360,H=400;cx.scale(2,2);
+function mk(k,side,g,m1,m2,i,n){const t=T[k];return{k,side,g,x:24+(i%n)/n*(W-48)+Math.random()*8,y:side?26+Math.random()*40:H-26-Math.random()*40,hp:t.hp*g*m2,mx:t.hp*g*m2,atk:t.atk*g*m1,cd:0,fl:0}}
+function enemyArmy(){const lv=(S.stage-1)*8+S.round,budget=28*Math.pow(1.12,lv-1);const r=[];let b=budget;
+ const ks=['s','a','c'];let i=0;while(b>8&&r.length<400){const k=ks[(Math.random()*ks.length)|0];if(lv<3&&k=='c')continue;r.push(k);b-=T[k].c;i++}return r}
+function start(){
+ const mine=[];for(const k in S.army)for(let i=0;i<S.army[k];i++)mine.push(k);
+ const en=enemyArmy(),g1=Math.max(1,Math.ceil(mine.length/50)),g2=Math.max(1,Math.ceil(en.length/50));
+ const A=[],B=[],ev=1+.02*lvl();
+ for(let i=0;i<mine.length;i+=g1){A.push(mk(mine[i],0,Math.min(g1,mine.length-i),mul('f'),mul('b'),A.length,50))}
+ for(let i=0;i<en.length;i+=g2){B.push(mk(en[i],1,Math.min(g2,en.length-i),ev,ev,B.length,50))}
+ battle={u:A.concat(B),t:0,ea:en.length};$('log').textContent=`幕蘭修士 ${en.length} 人來襲！`;ui()}
+$('fight').onclick=start;
+function drawU(u){const g=u.g>1?38:30,k=u.k,x=u.x,y=u.y,P=u.side?'👺':'🧑';
+ cx.globalAlpha=.35;cx.fillStyle=u.side?'#e0455a':'#2d8cf0';cx.beginPath();cx.ellipse(x,y+8,11,4.5,0,0,7);cx.fill();cx.globalAlpha=1;
+ if(sprOk){const key=u.side?(k=='s'?'gs':k=='a'?'ga':'gr'):k;const[sx,sy]=spx(key);cx.drawImage(sprImg,sx,sy,cw,ch,x-g/2,y-g,g,g);return}
+ const s=g-3;cx.font=s+'px serif';
+ if(k=='c'){cx.fillText('🐴',x,y+3);cx.font=(s-6)+'px serif';cx.fillText(P,x,y-8)}
+ else{cx.fillText(P,x,y);cx.font=(s-8)+'px serif';cx.fillText(k=='s'?'🗡️':'🏹',x+13,y+5)}}
+function step(dt){const U=battle.u;battle.t+=dt;
+ for(const a of U){if(a.hp<=0)continue;let best=null,bd=1e9;
+  for(const b of U){if(b.side==a.side||b.hp<=0)continue;const d=Math.hypot(a.x-b.x,a.y-b.y);if(d<bd){bd=d;best=b}}
+  if(!best)continue;const t=T[a.k];a.cd-=dt;a.fl=Math.max(0,a.fl-dt);
+  if(bd>t.rg){const s=t.sp0*dt;a.x+=(best.x-a.x)/bd*s;a.y+=(best.y-a.y)/bd*s}
+  else if(a.cd<=0){best.hp-=a.atk;a.cd=.8;a.fl=.12;a.tg=best}}
+ for(let i=U.length-1;i>=0;i--)if(U[i].hp<=0)U.splice(i,1)}
+function draw(){cx.clearRect(0,0,W,H);cx.fillStyle='#e9c98a';cx.fillRect(0,0,W,H);
+ cx.fillStyle='#b5793a';cx.fillRect(0,0,W,14);cx.fillStyle='#9a9a9a';cx.fillRect(0,H-14,W,14);
+ cx.font='12px serif';cx.textAlign='center';cx.textBaseline='middle';
+ const put=(key,emo,x,y,sz)=>{if(sprOk){const[sx,sy]=spx(key);cx.drawImage(sprImg,sx,sy,cw,ch,x-sz/2,y-sz/2,sz,sz)}else{cx.font=(sz*.72)+'px serif';cx.fillText(emo,x,y)}};
+ if(sprOk)for(let x=15;x<W;x+=24){put('wood','🪵',x,7,22);put('wall','🧱',x,H-7,22)}
+ else for(let x=10;x<W;x+=30){cx.font='22px serif';cx.fillText('🪵',x,7);cx.fillText('🧱',x,H-7)}
+ put('leader','🤴',30,H-40,40);put('boss','👹',W-30,40,40);
+ if(!battle){put('castle','🏰',W/2,H-66,64);put('barracks','⛺',64,H-66,54);put('anvil','⚒️',W-64,H-66,54);put('bow','🏹',W/2,66,54);cx.font='bold 26px sans-serif';cx.fillStyle='#3b2412';
+  cx.fillText('幕蘭修士自山上來襲',W/2,H/2-18);cx.fillText(`我方 ${total(S.army)} 名修士守山`,W/2,H/2+18);return}
+ for(const u of battle.u){if(u.fl>0&&u.tg&&T[u.k].rg>20){cx.strokeStyle=u.side?'#e0455a':'#2d8cf0';cx.beginPath();cx.moveTo(u.x,u.y);cx.lineTo(u.tg.x,u.tg.y);cx.lineWidth=2;cx.stroke()}
+  drawU(u);
+  cx.fillStyle=u.side?'#e0455a':'#2d8cf0';cx.fillRect(u.x-13,u.y-18,26*Math.max(0,u.hp/u.mx),4)}}
+function end(win,draw_){const pw=win;
+ if(pw){S.gold+=income();S.wins++;S.trophies+=12+S.stage;$('log').textContent='🎉 擊退幕蘭！';
+  S.round++;if(S.round>8){S.round=1;S.stage++;S.best=Math.max(S.best,S.stage);S.gold+=30;S.lives=Math.min(5,S.lives+1);$('log').textContent=`🏆 攻破關隘！進入第 ${S.stage} 關（+30🪙靈石 +1❤️）`}}
+ else if(draw_){S.gold+=Math.floor(income()/2);$('log').textContent='🤝 僵持不下，雙方修士皆未退，靈石收入減半';}
+ else{S.lives--;S.trophies=Math.max(0,S.trophies-10);S.gold+=Math.floor(income()/2);$('log').textContent='💥 護山大陣受損！失去 1 顆❤️';
+  if(S.lives<=0){$('log').textContent=`☠️ 山門失守！最高抵達第 ${S.best} 關，重新開始。`;const bs=S.best,tr=S.trophies;S=fresh();S.best=bs;S.trophies=tr}}
+ battle=null;newFoe();save();ui()}
+let last=0;function loop(ts){const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+ if(battle){for(let i=0;i<speed*2;i++)step(dt/2);
+  const a=battle.u.some(u=>!u.side&&u.hp>0),b=battle.u.some(u=>u.side&&u.hp>0);
+  if(!b&&a)end(true);else if(!a)end(false);else if(battle.t>45)end(false,true)}
+ draw();requestAnimationFrame(loop)}
+$('spd').onclick=()=>{speed=speed==1?2:speed==2?4:1;$('spd').innerHTML='<span class="em">⏩</span> 速度 x'+speed};
+// JSON
+const pack=()=>JSON.stringify(S,null,1);
+$('ex').onclick=async()=>{const j=pack(),fn=`siege-save-S${S.stage}-R${S.round}.json`;const L=$('log');
+ try{const d=window.claude&&await window.claude.use('downloads');
+  if(d){await d.save({filename:fn,data:j});L.textContent='✅ 存檔已下載：'+fn;return}}catch(e){if(e&&e.code==='declined'){L.textContent='已取消下載';return}}
+ try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([j],{type:'application/json'}));a.download=fn;document.body.appendChild(a);a.click();a.remove();L.textContent='已匯出 '+fn}catch(e){try{await navigator.clipboard.writeText(j);L.textContent='無法下載，存檔內容已複製到剪貼簿'}catch(_){L.textContent='❌ 此環境無法下載存檔'}}};
+function imp(txt){try{if(battle)throw 0;S=norm(JSON.parse(txt));save();ui();$('log').textContent='✅ 匯入成功'}catch(e){$('log').textContent='❌ 匯入失敗：格式不正確或戰鬥中'}}
+$('fi').onclick=()=>$('file').click();
+$('file').onchange=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>imp(r.result);r.readAsText(f);e.target.value=''};
+$('rs').onclick=()=>{if(battle)return;if(confirm('確定散盡修為，重置所有進度？')){S=fresh();save();ui()}};
+load();ui();requestAnimationFrame(loop);
+</script></body></html>
