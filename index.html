@@ -29,7 +29,7 @@ h4{margin:0 0 8px;font-size:24px}#farm{display:grid;grid-template-columns:repeat
 </style></head><body><div id="app">
 <div class="hud"><span><i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="tr">0</b></span><span><i class="ico" style="--px:100%;--py:66.6667%">🏰</i> 關隘 <b id="st">1</b></span><span>回合 <b id="rd">1</b>/8</span><span id="hp">❤️❤️❤️</span></div>
 <div class="hud" style="margin-top:6px"><span><i class="ico" style="--px:40%;--py:33.3333%">🗡️</i> +<b id="fa">0</b>%</span><span><i class="ico" style="--px:100%;--py:33.3333%">🛡️</i> +<b id="ba">0</b>%</span><span><i class="ico" style="--px:60%;--py:66.6667%">🪙</i> <b id="gd">0</b> (+<b id="inc">0</b>/回合)</span></div>
-<div class="hud" style="margin-top:6px;justify-content:space-around"><span><i class="ico" style="--px:60%;--py:0%">🤴</i> 黃龍山 <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="tr2"></b></span><span><span class="em">⚔️</span> VS <span class="em">⚔️</span></span><span><i class="ico" style="--px:20%;--py:33.3333%">👹</i> <b id="fn"></b> <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="ft"></b></span></div>
+<div class="hud" style="margin-top:6px;justify-content:space-around"><span><i class="ico" style="--px:60%;--py:0%">🤴</i> 韓立 <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="tr2"></b></span><span><span class="em">⚔️</span> VS <span class="em">⚔️</span></span><span><i class="ico" style="--px:20%;--py:33.3333%">👹</i> <b id="fn"></b> <i class="ico" style="--px:80%;--py:66.6667%">🏆</i><b id="ft"></b></span></div>
 <details class="panel story" open><summary>📜 黃龍山之戰・故事背景</summary>
 <p>天南九國盟，幕蘭人大舉入侵，越國七派與各路修士被迫退守黃龍山，與幕蘭展開一場生死之戰。</p>
 <p>你是黃龍山的守山長老，以靈石招募劍修、弓修與靈騎，並在山中興建煉器坊、護山陣與靈石礦，提升戰力與靈石收入。</p>
@@ -74,7 +74,7 @@ const mul=(k)=>1+.1*S.up[k];
 const lvl=()=>(S.stage-1)*8+S.round;
 const income=()=>20+S.up.m*7+lvl()*2;
 const upCost=k=>Math.round(UP[k].b*(1+S.up[k]*.8));
-const NA=['血煞','幽冥','赤煉','玄陰','黑煞','天魔'],NB=['老怪','真人','散人','道人','尊者','魔君'];
+const NA=['血煞','幽冥','赤煉','玄陰','黑煞','天哭'],NB=['法士','真人','築基法士','結丹法士','上師','大上師'];
 let foe={n:'',t:0};
 function newFoe(){foe={n:NA[Math.random()*6|0]+NB[Math.random()*6|0],t:Math.max(0,S.trophies+(Math.random()*40-20|0))}}
 function ui(){
